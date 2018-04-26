@@ -1,0 +1,17 @@
+{
+"name": "pipcam",
+"version": "1.0.0",
+"main": "pipcam.js",
+"description": "A cat tracker, image capturer."
+}
+
+"repository": {
+    "type": "git",
+    "url": "https://github.com/claritymckenzie"
+}
+
+"dependencies": {
+  "request": "^2.85.0",
+  "dotenv": "5.0.1",
+
+},
