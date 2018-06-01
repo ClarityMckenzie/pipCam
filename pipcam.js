@@ -1,18 +1,33 @@
+// importing tools
+
 const request = require('request');
 const fs = require('fs');
 const spawn = require('child_process').spawn;
+const exec = require('child_process').exec;
 const http = require('http');
 require('dotenv').config();
 
-let imageWidth = 640;
-let imageHeight = 480;
-let pictureAlbum = [];
+// spin up an ngrok tunnel
+
+const args = [process.env.MY_NGROK]
+
+function startNgrok() {
+exec(`./ngrok ${args}`)
+};
+
+startNgrok();
+
 
 // take picture on raspberrypi with raspistill command, save as timestamp.jpg to pictureAlbum array
 
+const imageWidth = 640;
+const imageHeight = 480;
+let pictureAlbum = [];
+
 function takePicture() {
     const name = Date.now() + '.jpg';
-    const args = ['-w', imageWidth, '-h', imageHeight, '-o', name];
+    const args = ['-w', imageWidth, '-h', imageHeight, '-vf', '-hf',
+'-o', name];
     spawn('raspistill', args);
     pictureAlbum.unshift(`${name}`);
     console.log(`We saved the photo as ${name}.`);
@@ -27,7 +42,7 @@ function upload(newPic) {
             url: 'https://slack.com/api/files.upload',
             formData: {
                 token: process.env.MY_BOT_TOKEN,
-                channels: "CABBY6CQ1",
+                channels: "process.env.MY_CHANNEL",
                 title: "Your cat, as requested",
                 filetype: "auto",
                 file: fs.createReadStream(newPic),
@@ -51,7 +66,7 @@ function noCatReport() {
         });
 };
 
-// start http server. request will launch python child process to detect motion. if it returns a '1'/true, takePicture. after 10 seconds, upload the first picture in pictureAlbum array. otherwise, run noCatReport function to send error message. 
+// start http server. request will launch python child process to detect motion. if it returns a '1'/true, takePicture. after 10 seconds, upload the first picture in pictureAlbum array. otherwise, run noCatReport function to send error message.
 
 http.createServer(function(req, res) {
 
@@ -59,7 +74,7 @@ http.createServer(function(req, res) {
 
     motionSensor.stdout.on('data', function(data) {
 
-        let result = parseInt(`${data}`);
+        let result = parseInt('${data}');
         if (result === 1) {
             takePicture();
             setTimeout(function() {
@@ -67,7 +82,6 @@ http.createServer(function(req, res) {
             }, 10000)
         } else {
             noCatReport();
-            console.log("No cats 'round here!'")
         }
     });
     res.end("Where's the cat at? We'll post our findings in <#CABBY6CQ1>.");
