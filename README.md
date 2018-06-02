@@ -2,11 +2,11 @@
 
 ![The Machine](https://github.com/ClarityMckenzie/pipCam/blob/master/pipcam.jpg)
 
-What:
+<b>What:</b>
 
 pipCam is a Raspberry Pi program built with NodeJS and Python. It can be triggered from Slack with the command, /pipcam. If motion is detected near the Raspberry Pi, it will take a picture and upload it to Slack.  
 
-How: 
+<b>How:</b>
 
 mother.sh launches on boot, allowing on.py to run the main program, pipcam.js, with a single click of the input button. mother.sh also runs off.py, allowing the Raspbery Pi to be safely shutdwn by holding the input button for 10 seconds. 
 
@@ -18,7 +18,7 @@ pipcam.js starts an HTTP server with an ngrok tunnel. When requested, pipcam.js 
 - input button 
 - jumper cables
 
-Why: 
+<b>Why:</b>
 
 It's nice to check on my cat during the work day. The project was inspired by @girliemac's KittyCam, but unfortunately, the KittyDar package is no longer supported. https://github.com/girliemac/RPi-KittyCam
 
